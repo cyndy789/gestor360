@@ -1,0 +1,14 @@
+{
+  "appId": "com.gestor360.app",
+  "appName": "Gestor360",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": true,
+    "backgroundColor": "#6366f1"
+  },
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  }
+}

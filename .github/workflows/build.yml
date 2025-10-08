@@ -1,0 +1,97 @@
+name: Build Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Criar package.json
+        run: |
+          cat > package.json << 'EOF'
+          {
+            "name": "gestor360",
+            "version": "1.0.0",
+            "description": "Sistema de gestão",
+            "scripts": {
+              "build": "echo 'Build ready'"
+            },
+            "devDependencies": {
+              "@capacitor/cli": "^6.2.0"
+            },
+            "dependencies": {
+              "@capacitor/android": "^6.2.0",
+              "@capacitor/core": "^6.2.0"
+            }
+          }
+          EOF
+
+      - name: Criar capacitor.config.json
+        run: |
+          cat > capacitor.config.json << 'EOF'
+          {
+            "appId": "com.gestor360.app",
+            "appName": "Gestor360",
+            "webDir": "www",
+            "bundledWebRuntime": false,
+            "android": {
+              "allowMixedContent": true,
+              "backgroundColor": "#6366f1"
+            },
+            "server": {
+              "androidScheme": "https",
+              "cleartext": true
+            }
+          }
+          EOF
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Inicializar Capacitor
+        run: npx cap add android
+
+      - name: Sincronizar projeto
+        run: npx cap sync android
+
+      - name: Dar permissão ao Gradle
+        run: chmod +x android/gradlew
+
+      - name: Build APK
+        working-directory: android
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: gestor360-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+
+      - name: Criar Release (opcional)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "APK build concluído com sucesso!"
+          echo "Versão: 1.0.0"
+          echo "Data: $(date)"

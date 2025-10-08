@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#6366f1">
+    <title>Gestor360 - Gestão de Clientes e Finanças</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #6366f1;
+        }
+
+        .logout-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* Dashboard Cards */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon {
+            font-size: 32px;
+        }
+
+        .eye-icon {
+            cursor: pointer;
+            font-size: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .eye-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+
+        .hidden-value {
+            filter: blur(8px);
+            user-select: none;
+        }
+
+        .receita { color: #10b981; }
+        .despesa { color: #ef4444; }
+        .lucro { color: #3b82f6; }
+        .contratos { color: #f59e0b; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+        }
+
+        .tab {
+            background: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            background: #6366f1;
+            color: white;
+        }
+
+        /* Forms */
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #334155;
+        }
+
+        label.required::after {
+            content: ' *';
+            color: #ef4444;
+        }
+
+        input, select, textarea {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            transition: border 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        button {
+            background: #6366f1;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        button:hover {
+            background: #4f46e5;
+        }
+
+        /* Lists */
+        .list-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filters select, .filters input {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .item-info {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .item-details {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-edit, .btn-delete, .btn-view {
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .btn-edit {
+            background: #f59e0b;
+        }
+
+        .btn-delete {
+            background: #ef4444;
+        }
+
+        .btn-view {
+            background: #3b82f6;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-ativo {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-vencido {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .alert-expiring {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f59e0b;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        /* Bottom Menu */
+        .bottom-menu {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            color: #94a3b8;
+            transition: color 0.3s ease;
+        }
+
+        .menu-item.active {
+            color: #6366f1;
+        }
+
+        .menu-item span {
+            font-size: 24px;
+        }
+
+        .menu-item p {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* Login */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-logo {
+            text-align: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: #6366f1;
+            margin-bottom: 30px;
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .item-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-box">
+            <div class="login-logo">Gestor360</div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginPassword" class="required">Senha</label>
+                    <input type="password" id="loginPassword" placeholder="Digite a senha compartilhada" required>
+                </div>
+                <button type="submit" style="width: 100%; margin-top: 20px;">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="mainApp" class="hidden">
+        <div class="container">
+            <div class="header">
+                <div class="logo">Gestor360</div>
+                <button class="logout-btn" onclick="logout()">Sair</button>
+            </div>
+
+            <!-- Alertas de Contratos Vencendo -->
+            <div id="expiringAlerts"></div>
+
+            <!-- Dashboard -->
+            <div id="dashboardSection">
+                <div class="dashboard">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-icon">💰</span>
+                            <span class="eye-icon" onclick="toggleVisibility('receita')">👁️</span>
+                        </div>
+                        <div class="card-title">Receita Total</div>
+                        <div class="card-value receita hidden-value" id="receitaValue">R$ 0,00</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-icon">💸</span>
+                            <span class="eye-icon" onclick="toggleVisibility('despesa')">👁️</span>
+                        </div>
+                        <div class="card-title">Despesas Totais</div>
+                        <div class="card-value despesa hidden-value" id="despesaValue">R$ 0,00</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-icon">📈</span>
+                            <span class="eye-icon" onclick="toggleVisibility('lucro')">👁️</span>
+                        </div>
+                        <div class="card-title">Lucro Líquido</div>
+                        <div class="card-value lucro hidden-value" id="lucroValue">R$ 0,00</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-icon">📄</span>
+                            <span class="eye-icon" onclick="toggleVisibility('contratos')">👁️</span>
+                        </div>
+                        <div class="card-title">Contratos Ativos</div>
+                        <div class="card-value contratos hidden-value" id="contratosValue">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Clientes Section -->
+            <div id="clientesSection" class="hidden">
+                <div class="form-section">
+                    <h2 style="margin-bottom: 20px;">Cadastrar Cliente</h2>
+                    <form id="clienteForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="clienteNome" class="required">Nome do Cliente</label>
+                                <input type="text" id="clienteNome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="clienteCidade" class="required">Cidade</label>
+                                <input type="text" id="clienteCidade" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="clienteValor" class="required">Valor Mensal (R$)</label>
+                                <input type="number" id="clienteValor" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="clienteDataInicio" class="required">Data de Início</label>
+                                <input type="date" id="clienteDataInicio" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="clienteComissao">Comissão (%)</label>
+                                <input type="number" id="clienteComissao" step="0.01" min="0" max="100">
+                            </div>
+                            <div class="form-group">
+                                <label for="clienteContrato">Upload de Contrato</label>
+                                <input type="file" id="clienteContrato" accept=".pdf,.jpg,.jpeg,.png">
+                            </div>
+                        </div>
+                        <button type="submit" style="margin-top: 20px;">Cadastrar Cliente</button>
+                    </form>
+                </div>
+
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">Lista de Clientes</h2>
+                    <div class="filters">
+                        <select id="filterCidade" onchange="filterClientes()">
+                            <option value="">Todas as Cidades</option>
+                        </select>
+                        <select id="filterStatus" onchange="filterClientes()">
+                            <option value="">Todos os Status</option>
+                            <option value="ativo">Ativo</option>
+                            <option value="vencido">Vencido</option>
+                        </select>
+                        <input type="text" id="searchCliente" placeholder="Buscar cliente..." oninput="filterClientes()">
+                    </div>
+                    <div id="clientesList"></div>
+                </div>
+            </div>
+
+            <!-- Finanças Section -->
+            <div id="financasSection" class="hidden">
+                <div class="form-section">
+                    <h2 style="margin-bottom: 20px;">Cadastrar Despesa</h2>
+                    <form id="despesaForm">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="despesaDescricao" class="required">Descrição</label>
+                                <input type="text" id="despesaDescricao" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="despesaValor" class="required">Valor (R$)</label>
+                                <input type="number" id="despesaValor" step="0.01" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="despesaData" class="required">Data</label>
+                                <input type="date" id="despesaData" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="despesaCategoria" class="required">Categoria</label>
+                                <select id="despesaCategoria" required>
+                                    <option value="">Selecione...</option>
+                                    <option value="equipamento">Equipamento</option>
+                                    <option value="transporte">Transporte</option>
+                                    <option value="marketing">Marketing</option>
+                                    <option value="escritorio">Escritório</option>
+                                    <option value="outros">Outros</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" style="margin-top: 20px;">Cadastrar Despesa</button>
+                    </form>
+                </div>
+
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">Lista de Despesas</h2>
+                    <div class="filters">
+                        <select id="filterCategoria" onchange="filterDespesas()">
+                            <option value="">Todas as Categorias</option>
+                            <option value="equipamento">Equipamento</option>
+                            <option value="transporte">Transporte</option>
+                            <option value="marketing">Marketing</option>
+                            <option value="escritorio">Escritório</option>
+                            <option value="outros">Outros</option>
+                        </select>
+                        <input type="month" id="filterMes" onchange="filterDespesas()">
+                    </div>
+                    <div id="despesasList"></div>
+                </div>
+            </div>
+
+            <!-- Relatórios Section -->
+            <div id="relatoriosSection" class="hidden">
+                <div class="chart-container">
+                    <h2 style="margin-bottom: 20px;">Relatórios e Gráficos</h2>
+                    <div id="chartsContainer"></div>
+                    <button onclick="exportCSV()" style="margin-top: 20px;">📥 Exportar CSV</button>
+                </div>
+            </div>
+
+            <!-- Configurações Section -->
+            <div id="configuracoesSection" class="hidden">
+                <div class="form-section">
+                    <h2 style="margin-bottom: 20px;">Configurações</h2>
+                    <div class="form-group">
+                        <label for="newPassword">Alterar Senha</label>
+                        <input type="password" id="newPassword" placeholder="Nova senha">
+                    </div>
+                    <button onclick="changePassword()" style="margin-top: 15px;">Salvar Nova Senha</button>
+                    
+                    <hr style="margin: 30px 0; border: none; border-top: 2px solid #e2e8f0;">
+                    
+                    <h3 style="margin-bottom: 15px;">Backup de Dados</h3>
+                    <button onclick="exportBackup()">📦 Baixar Backup Completo</button>
+                    <button onclick="document.getElementById('importBackup').click()" style="background: #10b981; margin-left: 10px;">📥 Importar Backup</button>
+                    <input type="file" id="importBackup" accept=".json" style="display: none;" onchange="importBackup(this)">
+                    
+                    <hr style="margin: 30px 0; border: none; border-top: 2px solid #e2e8f0;">
+                    
+                    <button onclick="clearAllData()" style="background: #ef4444;">🗑️ Limpar Todos os Dados</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Menu -->
+        <div class="bottom-menu">
+            <div class="menu-item active" onclick="showSection('dashboard')">
+                <span>🏠</span>
+                <p>Início</p>
+            </div>
+            <div class="menu-item" onclick="showSection('clientes')">
+                <span>🧾</span>
+                <p>Clientes</p>
+            </div>
+            <div class="menu-item" onclick="showSection('financas')">
+                <span>💰</span>
+                <p>Finanças</p>
+            </div>
+            <div class="menu-item" onclick="showSection('relatorios')">
+                <span>📊</span>
+                <p>Relatórios</p>
+            </div>
+            <div class="menu-item" onclick="showSection('configuracoes')">
+                <span>⚙️</span>
+                <p>Config</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data Storage
+        let clientes = JSON.parse(localStorage.getItem('clientes')) || [];
+        let despesas = JSON.parse(localStorage.getItem('despesas')) || [];
+        let password = localStorage.getItem('password') || 'gestor360';
+        let visibilityState = {
+            receita: false,
+            despesa: false,
+            lucro: false,
+            contratos: false
+        };
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const inputPassword = document.getElementById('loginPassword').value;
+            if (inputPassword === password) {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+                updateDashboard();
+                checkExpiringContracts();
+            } else {
+                alert('Senha incorreta!');
+            }
+        });
+
+        function logout() {
+            document.getElementById('mainApp').classList.add('hidden');
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('loginPassword').value = '';
+        }
+
+        // Navigation
+        function showSection(section) {
+            document.querySelectorAll('.container > div:not(.header)').forEach(el => el.classList.add('hidden'));
+            document.getElementById(section + 'Section').classList.remove('hidden');
+            
+            document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (section === 'dashboard') {
+                updateDashboard();
+                checkExpiringContracts();
+            } else if (section === 'clientes') {
+                renderClientes();
+                updateCidadeFilter();
+            } else if (section === 'financas') {
+                renderDespesas();
+            } else if (section === 'relatorios') {
+                renderCharts();
+            }
+        }
+
+        // Toggle Visibility
+        function toggleVisibility(type) {
+            visibilityState[type] = !visibilityState[type];
+            const element = document.getElementById(type + 'Value');
+            if (visibilityState[type]) {
+                element.classList.remove('hidden-value');
+            } else {
+                element.classList.add('hidden-value');
+            }
+        }
+
+        // Dashboard
+        function updateDashboard() {
+            const receita = clientes.reduce((sum, c) => sum + parseFloat(c.valor), 0);
+            const despesaTotal = despesas.reduce((sum, d) => sum + parseFloat(d.valor), 0);
+            const lucro = receita - despesaTotal;
+            const contratosAtivos = clientes.filter(c => isContratoAtivo(c)).length;
+
+            document.getElementById('receitaValue').textContent = `R$ ${receita.toFixed(2)}`;
+            document.getElementById('despesaValue').textContent = `R$ ${despesaTotal.toFixed(2)}`;
+            document.getElementById('lucroValue').textContent = `R$ ${lucro.toFixed(2)}`;
+            document.getElementById('contratosValue').textContent = contratosAtivos;
+        }
+
+        // Cliente Form
+        document.getElementById('clienteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const cliente = {
+                id: Date.now(),
+                nome: document.getElementById('clienteNome').value,
+                cidade: document.getElementById('clienteCidade').value,
+                valor: parseFloat(document.getElementById('clienteValor').value),
+                dataInicio: document.getElementById('clienteDataInicio').value,
+                dataTermino: calcularDataTermino(document.getElementById('clienteDataInicio').value),
+                comissao: parseFloat(document.getElementById('clienteComissao').value) || 0,
+                contrato: null
+            };
+
+            const fileInput = document.getElementById('clienteContrato');
+            if (fileInput.files[0]) {
+                cliente.contrato = await fileToBase64(fileInput.files[0]);
+            }
+
+            clientes.push(cliente);
+            localStorage.setItem('clientes', JSON.stringify(clientes));
+            
+            e.target.reset();
+            alert('Cliente cadastrado com sucesso!');
+            renderClientes();
+            updateDashboard();
+        });
+
+        function calcularDataTermino(dataInicio) {
+            const data = new Date(dataInicio);
+            data.setFullYear(data.getFullYear() + 1);
+            return data.toISOString().split('T')[0];
+        }
+
+        function isContratoAtivo(cliente) {
+            const hoje = new Date();
+            const termino = new Date(cliente.dataTermino);
+            return hoje <= termino;
+        }
+
+        function diasParaVencer(cliente) {
+            const hoje = new Date();
+            const termino = new Date(cliente.dataTermino);
+            const diff = termino - hoje;
+            return Math.ceil(diff / (1000 * 60 * 60 * 24));
+        }
+
+        function checkExpiringContracts() {
+            const alertsDiv = document.getElementById('expiringAlerts');
+            const expiring = clientes.filter(c => {
+                const dias = diasParaVencer(c);
+                return dias > 0 && dias <= 30;
+            });
+
+            if (expiring.length > 0) {
+                alertsDiv.innerHTML = `
+                    <div class="alert-expiring">
+                        ⚠️ <strong>Atenção!</strong> ${expiring.length} contrato(s) vence(m) nos próximos 30 dias.
+                    </div>
+                `;
+            } else {
+                alertsDiv.innerHTML = '';
+            }
+        }
+
+        function renderClientes() {
+            const list = document.getElementById('clientesList');
+            const filtered = filterClientesArray();
+            
+            list.innerHTML = filtered.map(cliente => `
+                <div class="item">
+                    <div class="item-info">
+                        <div class="item-title">${cliente.nome}</div>
+                        <div class="item-details">
+                            📍 ${cliente.cidade} | 💰 R$ ${cliente.valor.toFixed(2)}/mês<br>
+                            📅 Início: ${formatDate(cliente.dataInicio)} | Término: ${formatDate(cliente.dataTermino)}
+                            ${cliente.comissao ? `<br>💵 Comissão: ${cliente.comissao}%` : ''}
+                        </div>
+                        <span class="status-badge ${isContratoAtivo(cliente) ? 'status-ativo' : 'status-vencido'}">
+                            ${isContratoAtivo(cliente) ? 'Ativo' : 'Vencido'}
+                        </span>
+                    </div>
+                    <div class="item-actions">
+                        ${cliente.contrato ? `<button class="btn-view" onclick="viewContrato(${cliente.id})">Ver Contrato</button>` : ''}
+                        <button class="btn-delete" onclick="deleteCliente(${cliente.id})">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateCidadeFilter() {
+            const cidades = [...new Set(clientes.map(c => c.cidade))];
+            const select = document.getElementById('filterCidade');
+            select.innerHTML = '<option value="">Todas as Cidades</option>' + 
+                cidades.map(c => `<option value="${c}">${c}</option>`).join('');
+        }
+
+        function filterClientesArray() {
+            const cidade = document.getElementById('filterCidade').value;
+            const status = document.getElementById('filterStatus').value;
+            const search = document.getElementById('searchCliente').value.toLowerCase();
+
+            return clientes.filter(c => {
+                const matchCidade = !cidade || c.cidade === cidade;
+                const matchStatus = !status || (status === 'ativo' ? isContratoAtivo(c) : !isContratoAtivo(c));
+                const matchSearch = !search || c.nome.toLowerCase().includes(search);
+                return matchCidade && matchStatus && matchSearch;
+            });
+        }
+
+        function filterClientes() {
+            renderClientes();
+        }
+
+        function deleteCliente(id) {
+            if (confirm('Deseja realmente excluir este cliente?')) {
+                clientes = clientes.filter(c => c.id !== id);
+                localStorage.setItem('clientes', JSON.stringify(clientes));
+                renderClientes();
+                updateDashboard();
+            }
+        }
+
+        function viewContrato(id) {
+            const cliente = clientes.find(c => c.id === id);
+            if (cliente && cliente.contrato) {
+                const newWindow = window.open();
+                newWindow.document.write(`
+                    <html>
+                        <head><title>Contrato - ${cliente.nome}</title></head>
+                        <body style="margin:0;">
+                            <iframe src="${cliente.contrato}" style="width:100%;height:100vh;border:none;"></iframe>
+                        </body>
+                    </html>
+                `);
+            }
+        }
+
+        // Despesa Form
+        document.getElementById('despesaForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const despesa = {
+                id: Date.now(),
+                descricao: document.getElementById('despesaDescricao').value,
+                valor: parseFloat(document.getElementById('despesaValor').value),
+                data: document.getElementById('despesaData').value,
+                categoria: document.getElementById('despesaCategoria').value
+            };
+
+            despesas.push(despesa);
+            localStorage.setItem('despesas', JSON.stringify(despesas));
+            
+            e.target.reset();
+            alert('Despesa cadastrada com sucesso!');
+            renderDespesas();
+            updateDashboard();
+        });
+
+        function renderDespesas() {
+            const list = document.getElementById('despesasList');
+            const filtered = filterDespesasArray();
+            
+            list.innerHTML = filtered.map(despesa => `
+                <div class="item">
+                    <div class="item-info">
+                        <div class="item-title">${despesa.descricao}</div>
+                        <div class="item-details">
+                            💰 R$ ${despesa.valor.toFixed(2)} | 📅 ${formatDate(despesa.data)}<br>
+                            🏷️ ${despesa.categoria}
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-delete" onclick="deleteDespesa(${despesa.id})">Excluir</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterDespesasArray() {
+            const categoria = document.getElementById('filterCategoria').value;
+            const mes = document.getElementById('filterMes').value;
+
+            return despesas.filter(d => {
+                const matchCategoria = !categoria || d.categoria === categoria;
+                const matchMes = !mes || d.data.startsWith(mes);
+                return matchCategoria && matchMes;
+            });
+        }
+
+        function filterDespesas() {
+            renderDespesas();
+        }
+
+        function deleteDespesa(id) {
+            if (confirm('Deseja realmente excluir esta despesa?')) {
+                despesas = despesas.filter(d => d.id !== id);
+                localStorage.setItem('despesas', JSON.stringify(despesas));
+                renderDespesas();
+                updateDashboard();
+            }
+        }
+
+        // Charts
+        function renderCharts() {
+            const container = document.getElementById('chartsContainer');
+            
+            // Receita por cidade
+            const receitaPorCidade = {};
+            clientes.forEach(c => {
+                receitaPorCidade[c.cidade] = (receitaPorCidade[c.cidade] || 0) + c.valor;
+            });
+
+            // Despesas por categoria
+            const despesasPorCategoria = {};
+            despesas.forEach(d => {
+                despesasPorCategoria[d.categoria] = (despesasPorCategoria[d.categoria] || 0) + d.valor;
+            });
+
+            // Contratos ativos vs vencidos
+            const ativos = clientes.filter(c => isContratoAtivo(c)).length;
+            const vencidos = clientes.length - ativos;
+
+            // Margem de lucro por cidade
+            const despesasPorCidade = {};
+            despesas.forEach(d => {
+                despesasPorCidade['Geral'] = (despesasPorCidade['Geral'] || 0) + d.valor;
+            });
+
+            container.innerHTML = `
+                <div style="margin-bottom: 30px;">
+                    <h3>📊 Receita por Cidade</h3>
+                    <div style="display: grid; gap: 10px; margin-top: 15px;">
+                        ${Object.entries(receitaPorCidade).map(([cidade, valor]) => `
+                            <div style="background: #f8fafc; padding: 15px; border-radius: 10px;">
+                                <strong>${cidade}:</strong> R$ ${valor.toFixed(2)}
+                                <div style="background: #10b981; height: 8px; border-radius: 4px; margin-top: 8px; width: ${(valor / Math.max(...Object.values(receitaPorCidade))) * 100}%;"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3>💸 Despesas por Categoria</h3>
+                    <div style="display: grid; gap: 10px; margin-top: 15px;">
+                        ${Object.entries(despesasPorCategoria).map(([categoria, valor]) => `
+                            <div style="background: #f8fafc; padding: 15px; border-radius: 10px;">
+                                <strong>${categoria}:</strong> R$ ${valor.toFixed(2)}
+                                <div style="background: #ef4444; height: 8px; border-radius: 4px; margin-top: 8px; width: ${(valor / Math.max(...Object.values(despesasPorCategoria))) * 100}%;"></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3>📄 Status dos Contratos</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-top: 15px;">
+                        <div style="background: #dcfce7; padding: 20px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: 700; color: #166534;">${ativos}</div>
+                            <div style="color: #166534; font-weight: 500;">Contratos Ativos</div>
+                        </div>
+                        <div style="background: #fee2e2; padding: 20px; border-radius: 10px; text-align: center;">
+                            <div style="font-size: 32px; font-weight: 700; color: #991b1b;">${vencidos}</div>
+                            <div style="color: #991b1b; font-weight: 500;">Contratos Vencidos</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <h3>📈 Resumo Financeiro</h3>
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 10px; margin-top: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <strong>Receita Total:</strong> R$ ${clientes.reduce((sum, c) => sum + c.valor, 0).toFixed(2)}
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <strong>Despesas Totais:</strong> R$ ${despesas.reduce((sum, d) => sum + d.valor, 0).toFixed(2)}
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <strong>Lucro Líquido:</strong> R$ ${(clientes.reduce((sum, c) => sum + c.valor, 0) - despesas.reduce((sum, d) => sum + d.valor, 0)).toFixed(2)}
+                        </div>
+                        <div>
+                            <strong>Margem de Lucro:</strong> ${((clientes.reduce((sum, c) => sum + c.valor, 0) - despesas.reduce((sum, d) => sum + d.valor, 0)) / clientes.reduce((sum, c) => sum + c.valor, 0) * 100 || 0).toFixed(2)}%
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Export CSV
+        function exportCSV() {
+            const csvClientes = 'CLIENTES\nNome,Cidade,Valor,Data Início,Data Término,Comissão,Status\n' +
+                clientes.map(c => `${c.nome},${c.cidade},${c.valor},${c.dataInicio},${c.dataTermino},${c.comissao},${isContratoAtivo(c) ? 'Ativo' : 'Vencido'}`).join('\n');
+
+            const csvDespesas = '\n\nDESPESAS\nDescricao,Valor,Data,Categoria\n' +
+                despesas.map(d => `${d.descricao},${d.valor},${d.data},${d.categoria}`).join('\n');
+
+            const csv = csvClientes + csvDespesas;
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `gestor360_export_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+        }
+
+        // Backup
+        function exportBackup() {
+            const backup = {
+                clientes,
+                despesas,
+                password,
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `gestor360_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        function importBackup(input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    if (confirm('Isso substituirá todos os dados atuais. Continuar?')) {
+                        clientes = backup.clientes || [];
+                        despesas = backup.despesas || [];
+                        password = backup.password || 'gestor360';
+                        
+                        localStorage.setItem('clientes', JSON.stringify(clientes));
+                        localStorage.setItem('despesas', JSON.stringify(despesas));
+                        localStorage.setItem('password', password);
+                        
+                        alert('Backup importado com sucesso!');
+                        updateDashboard();
+                    }
+                } catch (error) {
+                    alert('Erro ao importar backup: arquivo inválido');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // Settings
+        function changePassword() {
+            const newPass = document.getElementById('newPassword').value;
+            if (newPass) {
+                password = newPass;
+                localStorage.setItem('password', password);
+                alert('Senha alterada com sucesso!');
+                document.getElementById('newPassword').value = '';
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('ATENÇÃO! Isso apagará TODOS os dados permanentemente. Deseja continuar?')) {
+                if (confirm('Tem certeza? Esta ação não pode ser desfeita!')) {
+                    localStorage.clear();
+                    alert('Todos os dados foram apagados. A página será recarregada.');
+                    location.reload();
+                }
+            }
+        }
+
+        // Utilities
+        function formatDate(dateStr) {
+            const [y, m, d] = dateStr.split('-');
+            return `${d}/${m}/${y}`;
+        }
+
+        async function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+        }
+
+        // Initialize
+        updateDashboard();
+    </script>
+</body>
+</html>
